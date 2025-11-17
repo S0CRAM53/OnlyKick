@@ -14,4 +14,10 @@ public interface InventarioRepository extends JpaRepository<Inventario, Integer>
 
     //Metodo para encontrar todas las variantes de un producto
     List<Inventario> findByProductoIdProducto(Integer idProducto);
+
+    //Metodo para encontrar todo el inventario por talla
+    List<Inventario> findByTallaIdTalla(Integer idTalla);
+
+    //Metodo para encontrar todo el inventario de un color especifico
+    List<Inventario> findByColorIdColor(Integer idColor);
 }

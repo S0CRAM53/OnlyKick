@@ -11,4 +11,7 @@ public interface ProductoRepository extends JpaRepository<Producto, Integer> {
     //Metodo para filtrar productos por categoria y marca
     List<Producto> findByCategoriaIdCategoria(Integer idCategoria);
     List<Producto> findByMarcaIdMarca(Integer idMarca);
+
+    List<Producto> findByMaterialIdMaterial(Integer idMaterial);
+    List<Producto> findByGeneroIdGenero(Integer idGenero);
 }
