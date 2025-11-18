@@ -10,4 +10,7 @@ public interface DireccionesRepository extends JpaRepository<Direcciones, Intege
     
     //Metodo para buscar todas las direcciones de un usuario
     List<Direcciones> findByUsuarioIdUsuario(Integer idUsuario);
+
+    //Metodo para buscar todas las direcciones de una comuna
+    List<Direcciones> findByComunaIdComuna(Integer IdComuna);
 }
