@@ -46,14 +46,34 @@ public class VentaService {
         return ventaRepository.findByUsuarioIdUsuario(idUsuario);
     }
 
-    //procesarVenta es el metodo encargado de procesar una venta completa y asegura la integridad del stock y los totales
+    public Venta update(Venta venta) {
+        return ventaRepository.save(venta);
+    }
+
+    public Venta partialUpdate(Integer id, Venta ventaDetails) {
+        Venta existing = findById(id);
+        if (existing != null) {
+            if (ventaDetails.getEstadoVenta() != null) {
+                existing.setEstadoVenta(ventaDetails.getEstadoVenta());
+            }
+            if (ventaDetails.getDireccion() != null) {
+                existing.setDireccion(ventaDetails.getDireccion());
+            }
+            if (ventaDetails.getMetodoPago() != null) {
+                existing.setMetodoPago(ventaDetails.getMetodoPago());
+            }
+            if (ventaDetails.getMetodoEnvio() != null) {
+                existing.setMetodoEnvio(ventaDetails.getMetodoEnvio());
+            }
+            return ventaRepository.save(existing);
+        }
+        return null;
+    }
+
     public Venta procesarVenta(Venta venta, Set<ProductosVenta> productos) throws Exception {
-        
         BigDecimal totalCalculado = BigDecimal.ZERO;
 
-        //Verificar stock y calcular total
         for (ProductosVenta pv : productos) {
-            //Busca el stock de esta variante
             Optional<Inventario> stockOpt = inventarioRepository.findByProductoIdProductoAndTallaIdTallaAndColorIdColor(
                 pv.getProducto().getId_producto(),
                 pv.getTalla().getId_talla(),
@@ -61,36 +81,29 @@ public class VentaService {
             );
 
             if (!stockOpt.isPresent() || stockOpt.get().getStock() < pv.getCantidad()) {
-                // Si no hay stock, lanzamos una excepción y @Transactional revierte todo
                 throw new Exception("No hay stock suficiente para el producto: " + pv.getProducto().getNombreProducto());
             }
 
-            //Obtener el precio base del producto
             Producto p = productoRepository.findById(pv.getProducto().getId_producto()).orElseThrow();
-            pv.setPrecioUnitario(p.getPrecioBase()); // Guardamos el precio al momento de la venta
+            pv.setPrecioUnitario(p.getPrecioBase()); 
             
-            //Sumar al total
             totalCalculado = totalCalculado.add(
                 p.getPrecioBase().multiply(new BigDecimal(pv.getCantidad()))
             );
         }
 
-        //Guardar la Venta principal
         venta.setTotalVenta(totalCalculado);
-        Venta ventaGuardada = ventaRepository.save(venta); // Obtenemos el ID de la venta
+        Venta ventaGuardada = ventaRepository.save(venta);
 
-        //Guardar los ProductosVenta y actualizar el stock
         for (ProductosVenta pv : productos) {
-            // Vincular el producto a la venta
             pv.setVenta(ventaGuardada);
             productosVentaRepository.save(pv);
 
-            //Restar el stock
             Inventario inventario = inventarioRepository.findByProductoIdProductoAndTallaIdTallaAndColorIdColor(
                 pv.getProducto().getId_producto(),
                 pv.getTalla().getId_talla(),
                 pv.getColor().getId_color()
-            ).get(); // Sabemos que existe por la comprobación anterior
+            ).get(); 
 
             inventario.setStock(inventario.getStock() - pv.getCantidad());
             inventarioRepository.save(inventario);
@@ -99,15 +112,12 @@ public class VentaService {
         return ventaGuardada;
     }
 
-    //Eliminacion por id de venta, primero elimina los productosventas asociados y luego la venta
     public void deleteById(Integer id) {
-        //borra los productos asociados a la venta
+        // ... (tu lógica de borrado existente se mantiene igual) ...
         List<ProductosVenta> productosVenta = productosVentaRepository.findByVentaIdVenta(id);
         if (productosVenta != null && !productosVenta.isEmpty()) {
             productosVentaRepository.deleteAll(productosVenta);
         }
-        
-        //Borrar la Venta
         ventaRepository.deleteById(id);
     }
 }

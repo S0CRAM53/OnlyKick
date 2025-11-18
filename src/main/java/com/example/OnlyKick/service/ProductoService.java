@@ -43,34 +43,56 @@ public class ProductoService {
         return productoRepository.save(producto);
     }
 
-    //Eliminacion por cascada de productos, borrando imagenes, inventario y desvinculando productos venta
+
+    public Producto partialUpdate(Integer id, Producto productoDetails) {
+        Producto existing = findById(id);
+        if (existing != null) {
+            if (productoDetails.getNombreProducto() != null) {
+                existing.setNombreProducto(productoDetails.getNombreProducto());
+            }
+            if (productoDetails.getDescripcion() != null) {
+                existing.setDescripcion(productoDetails.getDescripcion());
+            }
+            if (productoDetails.getPrecioBase() != null) {
+                existing.setPrecioBase(productoDetails.getPrecioBase());
+            }
+            if (productoDetails.getCategoria() != null) {
+                existing.setCategoria(productoDetails.getCategoria());
+            }
+            if (productoDetails.getMarca() != null) {
+                existing.setMarca(productoDetails.getMarca());
+            }
+            if (productoDetails.getMaterial() != null) {
+                existing.setMaterial(productoDetails.getMaterial());
+            }
+            if (productoDetails.getGenero() != null) {
+                existing.setGenero(productoDetails.getGenero());
+            }
+            
+            return productoRepository.save(existing);
+        }
+        return null;
+    }
+
     public void deleteById(Integer id) {
-        //Borra Imágenes asociadas
         List<Imagen> imagenes = imagenRepository.findByProductoIdProducto(id);
         if (imagenes != null && !imagenes.isEmpty()) {
             imagenRepository.deleteAll(imagenes);
         }
-
-        //Borra Inventario asociado
         List<Inventario> inventarios = inventarioRepository.findByProductoIdProducto(id);
         if (inventarios != null && !inventarios.isEmpty()) {
             inventarioRepository.deleteAll(inventarios);
         }
-
-        //Desvincular historial de ProductosVenta
         List<ProductosVenta> pVentas = productosVentaRepository.findByProductoIdProducto(id);
          if (pVentas != null && !pVentas.isEmpty()) {
             for (ProductosVenta pVenta : pVentas) {
-                pVenta.setProducto(null); // Desvincula el producto de la venta
+                pVenta.setProducto(null); 
                 productosVentaRepository.save(pVenta);
             }
          }
-        
-        //borra el Producto
         productoRepository.deleteById(id);
     }
 
-    //Métodos de filtrado
     public List<Producto> findByCategoriaId(Integer idCategoria) {
         return productoRepository.findByCategoriaIdCategoria(idCategoria);
     }
