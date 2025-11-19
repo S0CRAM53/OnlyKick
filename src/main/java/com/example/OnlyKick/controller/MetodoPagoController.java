@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/metodos-pago")
+@RequestMapping("/api/v1/metodos-pago")
 public class MetodoPagoController {
 
     @Autowired

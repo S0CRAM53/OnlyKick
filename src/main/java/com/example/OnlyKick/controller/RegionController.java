@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/regiones")
+@RequestMapping("/api/v1/regiones")
 public class RegionController {
 
     @Autowired

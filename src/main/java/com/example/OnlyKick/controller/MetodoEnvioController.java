@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/metodos-envio")
+@RequestMapping("/api/v1/metodos-envio")
 public class MetodoEnvioController {
 
     @Autowired

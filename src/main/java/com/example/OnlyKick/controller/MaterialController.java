@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/materiales")
+@RequestMapping("/api/v1/materiales")
 public class MaterialController {
 
     @Autowired

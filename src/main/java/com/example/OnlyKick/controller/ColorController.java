@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/colores")
+@RequestMapping("/api/v1/colores")
 public class ColorController {
 
     @Autowired

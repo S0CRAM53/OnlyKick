@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/tallas")
+@RequestMapping("/api/v1/tallas")
 public class TallaController {
 
     @Autowired

@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/direcciones")
+@RequestMapping("/api/v1/direcciones")
 public class DireccionesController {
 
     @Autowired
